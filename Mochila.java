@@ -7,7 +7,7 @@ public class Mochila {
 
     static int[] pesos   = {2, 3, 4, 5, 6}; 
     static int[] valores = {3, 4, 5, 8, 9}; 
-    static int capacidad = 10; // Capacidad máxima de la mochila
+    static int capacidad = 10; // Capacidad máxima (mochila)
     static int tamPoblación = 6; // Tamaño de la población
     static double tasaCruce = 0.9; // Probabilidad de cruce
     static double tasaMutación = 0.2; // Probabilidad de mutación
@@ -123,13 +123,13 @@ class Individuo {
     public int valorTotal;
     public int pesoTotal;
     public int fitness;
-    private int capacidadMochila;
+    private int capacidad;
 
     public Individuo(int[] objetos, int[] valores, int[] pesos, int capacidad) {
         this.objetos = objetos;
         this.valores = valores;
         this.pesos = pesos;
-        capacidadMochila = capacidad;
+        this.capacidad = capacidad;
         calcularFitness();
     }
 
@@ -143,7 +143,7 @@ class Individuo {
             }
         }
 
-        fitness = (pesoTotal <= capacidadMochila) ? valorTotal : valorTotal / pesoTotal; // si excede el peso divide por peso para q el fitness sea bajo
+        fitness = (pesoTotal <= capacidad) ? valorTotal : valorTotal / pesoTotal; // si excede el peso divide por peso para q el fitness sea bajo
     }
 
     public void mutar() {
@@ -153,7 +153,7 @@ class Individuo {
         if (objetos[indice] == 1){
             pesoTotal += pesos[indice];
             valorTotal += valores[indice];
-            fitness = (pesoTotal <= capacidadMochila) ? valorTotal : valorTotal - pesoTotal;
+            fitness = (pesoTotal <= capacidad) ? valorTotal : valorTotal - pesoTotal;
         }
     }
 
