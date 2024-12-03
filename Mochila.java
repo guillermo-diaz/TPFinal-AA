@@ -22,6 +22,7 @@ public class Mochila {
         while (generacion < generacionesMax) {
             System.out.println("Generación " + generacion);
             imprimirPoblación(población);
+
             // Cruzar
             if (Math.random() < tasaCruce) {
                 Individuo[] mejores = seleccionarDosMejores(población);
@@ -40,7 +41,7 @@ public class Mochila {
             
             // Mutación
             for (Individuo individuo : población) {
-                if (Math.random() < tasaMutación && mejorIndividuo != individuo) {
+                if (Math.random() < tasaMutación && mejorIndividuo != individuo) { //si no es el mejor individuo, muta
                     individuo.mutar();
                 }
             }
@@ -82,19 +83,10 @@ public class Mochila {
 
     public static Individuo generarIndividuoAleatorio() {
         int[] objetos = new int[pesos.length];
-        int pesoActual = 0;
         Random random = new Random();
 
         for (int i = 0; i < pesos.length; i++) {
             objetos[i] = random.nextBoolean() ? 1 : 0;
-
-            // ver si considerar esto de controlar el peso, ya que nuestro fitness ya lo controla
-            // if (objetos[i] == 1) {
-            //     pesoActual += pesos[i];
-            //     if (pesoActual > capacidad) {
-            //         objetos[i] = 0; // Reparar para no exceder la capacidad
-            //     }
-            // }
         }
         return new Individuo(objetos, valores, pesos, capacidad);
     }
