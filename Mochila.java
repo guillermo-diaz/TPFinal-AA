@@ -17,7 +17,6 @@ public class Mochila {
         List<Individuo> población = generarPoblaciónInicial();
         Individuo mejorIndividuo;
         int generacion = 0;
-        población.sort((ind1, ind2) -> ind2.fitness - ind1.fitness); // ordeno por fitness para mayor eficiencia
 
         while (generacion < generacionesMax) {
             System.out.println("Generación " + generacion);
@@ -32,20 +31,16 @@ public class Mochila {
                 borrarPeores(población);
                 población.add(hijos[0]);
                 población.add(hijos[1]);
-
-                población.sort((ind1, ind2) -> ind2.fitness - ind1.fitness); //ordena nuevamente
             }
 
             mejorIndividuo = obtenerMejorIndividuo(población);
 
-            
             // Mutación
             for (Individuo individuo : población) {
                 if (Math.random() < tasaMutación && mejorIndividuo != individuo) { //si no es el mejor individuo, muta
                     individuo.mutar();
                 }
             }
-            población.sort((ind1, ind2) -> ind2.fitness - ind1.fitness); 
             generacion++;
         }
 
@@ -56,7 +51,7 @@ public class Mochila {
     }
 
     public static Individuo[] cruzar(Individuo padre1, Individuo padre2) {
-        int puntoCruce = pesos.length/2; //la mitad como el video
+        int puntoCruce = pesos.length/2; //se divide el arreglo a la mitad
         int[] hijo1 = new int[pesos.length];
         int[] hijo2 = new int[pesos.length];
 
@@ -92,23 +87,53 @@ public class Mochila {
     }
 
     public static void borrarPeores(List<Individuo> población) {
-        if (población.size() >= 2) {
-            // Eliminar los dos últimos elementos
-            población.remove(población.size() - 1);
-            población.remove(población.size() - 1);
+    
+        Individuo peor = null;
+        Individuo segundoPeor = null;
+    
+        for (Individuo ind : población) {
+            if (peor == null || ind.fitness < peor.fitness) {
+                // Actualizamos el segundo peor antes de actualizar el peor
+                segundoPeor = peor;
+                peor = ind;
+            } else if (segundoPeor == null || ind.fitness < segundoPeor.fitness) {
+                // Actualizamos solo el segundo peor si no es peor que el actual peor
+                segundoPeor = ind;
+            }
         }
+    
+        // Eliminamos los dos peores individuos
+        población.remove(peor);
+        población.remove(segundoPeor);
     }
 
     public static Individuo[] seleccionarDosMejores(List<Individuo> población) {
-        Individuo mejor = población.get(0);  // El de mayor fitness
-        Individuo segundoMejor = población.get(1);  // El segundo de mayor fitness
+
+        Individuo mejor = null;
+        Individuo segundoMejor = null;
+    
+        for (Individuo ind : población) {
+            if (mejor == null || ind.fitness > mejor.fitness) {
+                // Actualizamos el segundo mejor antes de actualizar el mejor
+                segundoMejor = mejor;
+                mejor = ind;
+            } else if (segundoMejor == null || ind.fitness > segundoMejor.fitness) {
+                // Actualizamos solo el segundo mejor si no supera al mejor
+                segundoMejor = ind;
+            }
+        }
+
         return new Individuo[]{mejor, segundoMejor};
     }
 
-    
-
     public static Individuo obtenerMejorIndividuo(List<Individuo> población) {
-        return población.get(0);
+        Individuo mejorIndividuo = null;
+        for (Individuo ind : población) {
+            if (mejorIndividuo == null || ind.fitness > mejorIndividuo.fitness) {
+                mejorIndividuo = ind;
+            }
+        }
+    return mejorIndividuo;
     }
 
     public static void imprimirPoblación(List<Individuo> población) {
@@ -143,7 +168,7 @@ class Individuo {
             }
         }
 
-        fitness = (pesoTotal <= capacidad) ? valorTotal : valorTotal / pesoTotal; // si excede el peso divide por peso para q el fitness sea bajo
+        fitness = (pesoTotal <= capacidad) ? valorTotal : 0; // si excede el peso se le asigna un valor 0 de fitness
     }
 
     public void mutar() {
@@ -153,7 +178,7 @@ class Individuo {
         if (objetos[indice] == 1){
             pesoTotal += pesos[indice];
             valorTotal += valores[indice];
-            fitness = (pesoTotal <= capacidad) ? valorTotal : valorTotal - pesoTotal;
+            fitness = (pesoTotal <= capacidad) ? valorTotal : 0; // si excede el peso se le asigna un valor 0 de fitness
         }
     }
 
