@@ -9,7 +9,6 @@ public class Mochila {
     static int[] valores = {3, 4, 5, 8, 9}; 
     static int capacidad = 10; // Capacidad máxima (mochila)
     static int tamPoblación = 6; // Tamaño de la población
-    static double tasaCruce = 0.9; // Probabilidad de cruce
     static double tasaMutación = 0.2; // Probabilidad de mutación
     static int generacionesMax = 50; // Máximo número de generaciones
 
@@ -22,17 +21,14 @@ public class Mochila {
             System.out.println("Generación " + generacion);
             imprimirPoblación(población);
 
-            // Cruzar
-            if (Math.random() < tasaCruce) {
-                Individuo[] mejores = seleccionarDosMejores(población);
-                Individuo padre1 = mejores[0];
-                Individuo padre2 = mejores[1];
-                Individuo[] hijos = cruzar(padre1, padre2);
-                borrarPeores(población);
-                población.add(hijos[0]);
-                población.add(hijos[1]);
-            }
-
+            Individuo[] mejores = seleccionarDosMejores(población);
+            Individuo padre1 = mejores[0];
+            Individuo padre2 = mejores[1];
+            Individuo[] hijos = cruzar(padre1, padre2);
+            borrarPeores(población);
+            población.add(hijos[0]);
+            población.add(hijos[1]);
+        
             mejorIndividuo = obtenerMejorIndividuo(población);
 
             // Mutación
