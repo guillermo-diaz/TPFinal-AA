@@ -179,6 +179,10 @@ class Individuo {
             pesoTotal += pesos[indice];
             valorTotal += valores[indice];
             fitness = (pesoTotal <= capacidad) ? valorTotal : 0; // si excede el peso se le asigna un valor 0 de fitness
+        } else {
+            pesoTotal -= pesos[indice];
+            valorTotal -= valores[indice];
+            fitness = (pesoTotal <= capacidad) ? valorTotal : 0;
         }
     }
 
